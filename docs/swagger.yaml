@@ -1,0 +1,78 @@
+basePath: /
+definitions:
+  handlers.CreateTaskRequest:
+    properties:
+      status:
+        type: string
+      title:
+        type: string
+    type: object
+  models.Task:
+    properties:
+      id:
+        type: string
+      status:
+        $ref: '#/definitions/models.TaskStatus'
+      title:
+        type: string
+    type: object
+  models.TaskStatus:
+    enum:
+    - todo
+    - in_progress
+    - done
+    type: string
+    x-enum-varnames:
+    - StatusTodo
+    - StatusInProgress
+    - StatusDone
+host: localhost:8080
+info:
+  contact: {}
+  description: Minimal task management API
+  title: Task API
+  version: "1.0"
+paths:
+  /tasks:
+    get:
+      description: Get all tasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Task'
+            type: array
+      summary: List tasks
+      tags:
+      - tasks
+    post:
+      consumes:
+      - application/json
+      description: Create a new task
+      parameters:
+      - description: Task
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Task'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create task
+      tags:
+      - tasks
+swagger: "2.0"
